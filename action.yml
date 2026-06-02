@@ -1,0 +1,28 @@
+name: "Run docker image scan with trivy"
+description: "read env"
+inputs:
+  IMAGE:
+     required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Create Trivy config
+      shell: bash
+      run: |
+        cat > trivy.yaml <<'EOF'
+        scanners:
+          - vuln
+        severity:
+          - HIGH,CRITICAL
+        ignore-unfixed: true
+        exit-code: 1
+        sbom-sources:
+          - oci
+        EOF
+
+    - name: Scan pushed image SBOM for critical vulnerabilities
+      uses: aquasecurity/trivy-action@v0.36.0
+      with:
+        scan-type: image
+        image-ref: ${{ inputs.IMAGE }}
+        trivy-config: trivy.yaml
