@@ -7,6 +7,10 @@ inputs:
     required: false
     # default: "HIGH,CRITICAL" #TODO TO STICTLY ENFORCE SECURIRT
     default: "CRITICAL"
+  CREATE_SBOM:
+    required: false
+    # default: "HIGH,CRITICAL" #TODO TO STICTLY ENFORCE SECURIRT
+    default: "true"
 
 runs:
   using: "composite"
@@ -21,3 +25,19 @@ runs:
         # ignore-unfixed: false #TODO TO STICTLY ENFORCE SECURIRT
         ignore-unfixed: true
         exit-code: 1
+
+    - name: Generate CycloneDX SBOM
+      uses: aquasecurity/trivy-action@v0.36.0
+      with:
+        scan-type: image
+        image-ref: ${{ env.PRIMARY_IMAGE }}
+        format: cyclonedx
+        output: sbom.cdx.json
+      if: ${{ inputs.CREATE_SBOM == 'true' }} 
+
+    - name: Upload SBOM as GitHub artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: sbom-${{ github.event.repository.name }}-${{ github.sha }}
+        path: sbom.cdx.json
+      if: ${{ inputs.CREATE_SBOM == 'true' }}
