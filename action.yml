@@ -17,5 +17,5 @@ runs:
         image-ref: ${{ inputs.IMAGE }}
         vuln-type: os,library
         severity: ${{ inputs.SEVERITY }}
-        ignore-unfixed: true
+        ignore-unfixed: false
         exit-code: 1
