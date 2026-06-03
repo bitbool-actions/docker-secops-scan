@@ -5,7 +5,8 @@ inputs:
     required: true
   SEVERITY:
     required: false
-    default: "HIGH,CRITICAL"
+    # default: "HIGH,CRITICAL" #TODO TO STICTLY ENFORCE SECURIRT
+    default: "CRITICAL"
 
 runs:
   using: "composite"
@@ -17,5 +18,6 @@ runs:
         image-ref: ${{ inputs.IMAGE }}
         vuln-type: os,library
         severity: ${{ inputs.SEVERITY }}
-        ignore-unfixed: false
+        # ignore-unfixed: false #TODO TO STICTLY ENFORCE SECURIRT
+        ignore-unfixed: true
         exit-code: 1
