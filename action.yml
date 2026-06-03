@@ -5,11 +5,10 @@ inputs:
     required: true
   SEVERITY:
     required: false
-    # default: "HIGH,CRITICAL" #TODO TO STICTLY ENFORCE SECURIRT
+    # default: "HIGH,CRITICAL" #TODO TO STICTLY ENFORCE SECURITY
     default: "CRITICAL"
   CREATE_SBOM:
     required: false
-    # default: "HIGH,CRITICAL" #TODO TO STICTLY ENFORCE SECURIRT
     default: "true"
 
 runs:
@@ -22,7 +21,7 @@ runs:
         image-ref: ${{ inputs.IMAGE }}
         vuln-type: os,library
         severity: ${{ inputs.SEVERITY }}
-        # ignore-unfixed: false #TODO TO STICTLY ENFORCE SECURIRT
+        # ignore-unfixed: false #TODO TO STICTLY ENFORCE SECURITY
         ignore-unfixed: true
         exit-code: 1
 
