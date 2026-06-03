@@ -23,7 +23,7 @@ runs:
         severity: ${{ inputs.SEVERITY }}
         # ignore-unfixed: false #TODO TO STICTLY ENFORCE SECURITY
         ignore-unfixed: true
-        exit-code: 1
+        exit-code: 911
 
     - name: Generate CycloneDX SBOM
       uses: aquasecurity/trivy-action@v0.36.0
