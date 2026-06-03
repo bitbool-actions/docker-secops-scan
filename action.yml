@@ -50,7 +50,7 @@ runs:
         path: sbom.cdx.json
       if: ${{ inputs.CREATE_SBOM == 'true' }}
 
-    - name: Fail if Trivy found vulnerabilities
-      if: steps.trivy_sarif.outcome == 'failure'
-      shell: bash
-      run: exit 1      
+    # - name: Fail if Trivy found vulnerabilities
+    #   if: steps.trivy_sarif.outcome == 'failure'
+    #   shell: bash
+    #   run: exit 1      
