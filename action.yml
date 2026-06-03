@@ -16,6 +16,7 @@ runs:
   steps:
     - name: Scan pushed image for HIGH and CRITICAL vulnerabilities
       uses: aquasecurity/trivy-action@v0.36.0
+      continue-on-error: true
       with:
         scan-type: image
         image-ref: ${{ inputs.IMAGE }}
@@ -23,7 +24,15 @@ runs:
         severity: ${{ inputs.SEVERITY }}
         # ignore-unfixed: false #TODO TO STICTLY ENFORCE SECURITY
         ignore-unfixed: true
+        format: sarif
+        output: trivy-results.sarif
         exit-code: 911
+
+    - name: Upload Trivy SARIF to GitHub Code Scanning
+      if: always()
+      uses: github/codeql-action/upload-sarif@v4
+      with:
+        sarif_file: trivy-results.sarif
 
     - name: Generate CycloneDX SBOM
       uses: aquasecurity/trivy-action@v0.36.0
@@ -40,3 +49,8 @@ runs:
         name: sbom-${{ github.event.repository.name }}-${{ github.sha }}
         path: sbom.cdx.json
       if: ${{ inputs.CREATE_SBOM == 'true' }}
+
+    - name: Fail if Trivy found vulnerabilities
+      if: steps.trivy_sarif.outcome == 'failure'
+      shell: bash
+      run: exit 1      
